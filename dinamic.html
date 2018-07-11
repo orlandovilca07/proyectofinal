@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script>
+window.onload = function () {
+
+    var dps = []; // dataPoints
+    var chart = new CanvasJS.Chart("chartContainer", {
+        title :{
+            text: "NeuroSky"
+        },
+        axisY: {
+            includeZero: false
+        },      
+        data: [{
+            type: "line",
+            dataPoints: dps
+        }]
+    });
+
+    var xVal = 0;
+    var yVal = 100; 
+    var updateInterval = 1000;
+    var dataLength = 15; // number of dataPoints visible at any point
+
+    var ws = new WebSocket('ws://localhost:3001')
+
+    ws.onmessage = function (event) {
+        var dato = JSON.parse(event.data);
+        updateChart(dato.fecha, dato.dato);
+    };
+
+    var updateChart = function (xHora,yDato) {
+        dps.push({
+            x: xHora,
+            y: yDato
+        });
+        if (dps.length > dataLength) {
+            dps.shift();
+        }
+        chart.render();
+    };
+
+}
+</script>
+</head>
+<body>
+<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+<script src="./canvasjs.min.js"></script>
+</body>
+</html>
