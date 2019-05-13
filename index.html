@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>holi</title>
+</head>
+<body>
+<script>
+	var ws = new WebSocket("ws://fast-fortress-35174.herokuapp.com");
+	ws.onopen = function() {
+	    // Web Socket is connected, send data using send()
+	    alert("WebSocket conectado");
+	};
+		
+    ws.onmessage = function (evt) { 
+        var received_msg = evt.data;
+        alert("Message is received..."+received_msg);
+    };
+		
+	ws.onclose = function() { 
+	    alert("Connection is closed..."); 
+	};
+
+	function consultar(){
+		console.log(ws.readyState);
+		var message = {
+	    	consulta: 'consumoExtra',
+	    	idHouse: '2001'
+	    }
+	    ws.send(JSON.stringify(message));
+	}
+</script>
+<button onclick="consultar()">Buscar</button>
+</body>
+</html>
